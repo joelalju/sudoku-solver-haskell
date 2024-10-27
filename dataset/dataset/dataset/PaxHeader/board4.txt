@@ -1,0 +1,2 @@
+72 LIBARCHIVE.xattr.com.apple.quarantine=MDA4Mzs2NzA1MjJkYjtPdXRsb29rOw
+60 SCHILY.xattr.com.apple.quarantine=0083;670522db;Outlook;
