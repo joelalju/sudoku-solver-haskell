@@ -4,6 +4,8 @@ import Sudoku(Board, Solutions(..))
 
 -- /\/\/\ DO NOT MODIFY THE PRECEDING LINES /\/\/\
 
+import Debug.Trace (traceShow)
+
 {- (Remember to provide a brief (about 100-500 words) description of
    your implementation.)
  -}
@@ -19,8 +21,8 @@ nickname = "JohnGranblue"  -- replace `undefined' with a nickname for your solve
 numSolutions :: Board -> Solutions
 numSolutions [] = NoSolution
 numSolutions board 
-   | backtrackLoop board (length (head board)) (0,0) 0 == 1    = UniqueSolution
-   | backtrackLoop board (length (head board)) (0,0) 0 > 1     = MultipleSolutions
+   | backtrackLoop board board (length (head board)) (0,0) 0 == 1    = UniqueSolution
+   | backtrackLoop board board (length (head board)) (0,0) 0 > 1     = MultipleSolutions
    | otherwise                                       = NoSolution
 
 
@@ -28,8 +30,8 @@ numSolutions board
 -- TEST MAIN
 main :: IO ()
 main = do
-    let result = backtrackLoop exampleBoard (length (head exampleBoard)) (0,0) 0
-    --let result2 = backtrackLoop resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
+    let result = backtrackLoop exampleBoard exampleBoard (length (head exampleBoard)) (0,0) 0
+    --let result2 = backtrackLoop resolvedSudoku resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
     print result
     --print result2
     --let result3 = increaseValue exampleBoard (length (head exampleBoard)) (8,0)
@@ -66,15 +68,6 @@ resolvedSudoku =
 
 
 
---Check if there are duplicates or number above size limit in a row
-evaluateCombination:: [Int] -> Bool
-evaluateCombination [] = True
-evaluateCombination row =
-  let size = length row
-      cleanedRow = [x | x <- row, x /= 0]
-  in length [x | x <- [1..size], x `elem` row] == length cleanedRow
-  
-
 --increase value of a cell by 1
 increaseValue:: Board -> Int -> (Int, Int) -> Board
 increaseValue oldBoard lengthBoard (row,col) =
@@ -83,19 +76,41 @@ increaseValue oldBoard lengthBoard (row,col) =
         else oldBoard !! x !! y | y <- [0..lengthBoard - 1]]
      else oldBoard !! x | x <- [0..lengthBoard - 1]]
 
+--Check if there are duplicates or number above size limit in a row
+evaluateCombination:: [Int] -> Bool
+evaluateCombination [] = True
+evaluateCombination row =
+  let size = length row
+      cleanedRow = [x | x <- row, x /= 0]
+  in length [x | x <- [1..size], x `elem` row] == length cleanedRow
+
+--obtains the subgrid of a given square, turns it into a list and evaluates it
+evaluateSubgrid:: Board -> Int -> (Int,Int) -> Bool
+evaluateSubgrid newBoard subgridLength (row, col) =
+    let rowStart = row - (row `mod` subgridLength) --beginning of the subgrid's row in relation to the whole board
+        colStart = col - (col `mod` subgridLength) --beginning of the subgrid's column in relation to the whole board
+        rowEnd = rowStart + subgridLength - 1 --end of the subgrid's row in relation to the whole board, -1 to consider that lists start at 0
+        colEnd = colStart + subgridLength - 1 --end of the subgrid's column in relation to the whole board, -1 to consider that lists start at 0
+        evaluateList = [newBoard !! x !! y | x <- [rowStart..rowEnd], y <- [colStart..colEnd]]
+    in evaluateCombination evaluateList
+
 
 --counts the amount of 0s in the sudoku board
-backtrackLoop :: Board -> Int -> (Int,Int) -> Int -> Int
-backtrackLoop board lengthBoard (row,col) count
+backtrackLoop :: Board -> Board -> Int -> (Int,Int) -> Int -> Int
+backtrackLoop oldBoard board lengthBoard (row,col) count
     | row >= lengthBoard = count -- reached end of board
-    | col >= lengthBoard = backtrackLoop board lengthBoard (row + 1, 0) count --reached end of a row, moving to the next
-    | board !! row !! col  < lengthBoard =
+    | col >= lengthBoard = backtrackLoop oldBoard board lengthBoard (row + 1, 0) count --reached end of a row, moving to the next
+    | (board !! row !! col  < lengthBoard) && (oldBoard !! row !! col == 0) = --square was originally empty and can be incremented
         let newBoard = increaseValue board lengthBoard (row,col)
-        in backtrackLoop newBoard lengthBoard (row, col) count --new iteration with the updated board
-    | otherwise =
-        backtrackLoop board lengthBoard (row, col + 1) count --move to the next column
-
-
+            subgridLength = round(sqrt (fromIntegral lengthBoard)) --assuming that board complies with n^2, it will never give a decimal result
+        in  traceShow newBoard $
+            if (evaluateCombination (newBoard !! row) &&
+                evaluateCombination (newBoard !! col) &&
+                evaluateSubgrid newBoard subgridLength (row, col)
+                )
+                then backtrackLoop oldBoard newBoard lengthBoard (row, col + 1) count --new iteration with the updated board
+            else backtrackLoop oldBoard newBoard lengthBoard (row, col) count
+    | otherwise = backtrackLoop oldBoard board lengthBoard (row, col + 1) count -- current square has 9, move to the next
 
 
 --counts the amount of 0s in the sudoku board
