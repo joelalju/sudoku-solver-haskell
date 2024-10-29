@@ -28,12 +28,12 @@ numSolutions board
 -- TEST MAIN
 main :: IO ()
 main = do
-   -- let result = backtrackLoop exampleBoard (length (head exampleBoard)) (0,0) 0
+    let result = backtrackLoop exampleBoard (length (head exampleBoard)) (0,0) 0
     --let result2 = backtrackLoop resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
-    --print result
+    print result
     --print result2
-    let result3 = increaseValue exampleBoard (length (head exampleBoard)) (8,0)
-    print result3
+    --let result3 = increaseValue exampleBoard (length (head exampleBoard)) (8,0)
+    --print result3
 
 
 
@@ -88,11 +88,12 @@ increaseValue oldBoard lengthBoard (row,col) =
 backtrackLoop :: Board -> Int -> (Int,Int) -> Int -> Int
 backtrackLoop board lengthBoard (row,col) count
     | row >= lengthBoard = count -- reached end of board
-    | col >= lengthBoard = backtrackLoop board lengthBoard (row + 1, 0) count
-   -- | board !! row !! col  < lengthBoard =
-     --   let newBoard = increaseValue board lengthBoard (row,col)
-   -- | otherwise do
-     --   backtrackLoop board lengthBoard (row, col + 1) count
+    | col >= lengthBoard = backtrackLoop board lengthBoard (row + 1, 0) count --reached end of a row, moving to the next
+    | board !! row !! col  < lengthBoard =
+        let newBoard = increaseValue board lengthBoard (row,col)
+        in backtrackLoop newBoard lengthBoard (row, col) count --new iteration with the updated board
+    | otherwise =
+        backtrackLoop board lengthBoard (row, col + 1) count --move to the next column
 
 
 
