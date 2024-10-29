@@ -65,11 +65,12 @@ resolvedSudoku =
 
 
 --Board, row index, lengthBoard, true/false
-evaluateCombination:: [Int] -> Int
+evaluateCombination:: [Int] -> Bool
 evaluateCombination [] = True
-evaluateCombination row do
+evaluateCombination row =
   let size = length row
-  [x | x <- [0..size], x `elem` row]
+      cleanedRow = [x | x <- row, x /= 0]
+  in length [x | x <- [1..size], x `elem` row] == length cleanedRow
   
 
 --counts the amount of 0s in the sudoku board
@@ -85,8 +86,8 @@ backtrackLoop board lengthBoard (row,col) count
 
 --counts the amount of 0s in the sudoku board
 countLoop :: Board -> Int -> (Int,Int) -> Int -> Int
-backtrackLoop board lengthBoard (row,col) count
+countLoop board lengthBoard (row,col) count
     | row >= lengthBoard = count -- reached end of board
-    | col >= lengthBoard = backtrackLoop board lengthBoard (row + 1, 0) count
-    | board !! row !! col == 0 = backtrackLoop board lengthBoard (row, col + 1) (count + 1)
-    | otherwise = backtrackLoop board lengthBoard (row, col + 1) count
+    | col >= lengthBoard = countLoop board lengthBoard (row + 1, 0) count
+    | board !! row !! col == 0 = countLoop board lengthBoard (row, col + 1) (count + 1)
+    | otherwise = countLoop board lengthBoard (row, col + 1) count
