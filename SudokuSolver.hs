@@ -28,10 +28,12 @@ numSolutions board
 -- TEST MAIN
 main :: IO ()
 main = do
-    let result = backtrackLoop exampleBoard (length (head exampleBoard)) (0,0) 0
-    let result2 = backtrackLoop resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
-    print result
-    print result2
+   -- let result = backtrackLoop exampleBoard (length (head exampleBoard)) (0,0) 0
+    --let result2 = backtrackLoop resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
+    --print result
+    --print result2
+    let result3 = increaseValue exampleBoard (length (head exampleBoard)) (8,0)
+    print result3
 
 
 
@@ -64,7 +66,7 @@ resolvedSudoku =
 
 
 
---Board, row index, lengthBoard, true/false
+--Check if there are duplicates or number above size limit in a row
 evaluateCombination:: [Int] -> Bool
 evaluateCombination [] = True
 evaluateCombination row =
@@ -73,13 +75,24 @@ evaluateCombination row =
   in length [x | x <- [1..size], x `elem` row] == length cleanedRow
   
 
+--increase value of a cell by 1
+increaseValue:: Board -> Int -> (Int, Int) -> Board
+increaseValue oldBoard lengthBoard (row,col) =
+    [if x == row then 
+        [if y == col then (oldBoard !! x !! y) + 1 
+        else oldBoard !! x !! y | y <- [0..lengthBoard - 1]]
+     else oldBoard !! x | x <- [0..lengthBoard - 1]]
+
+
 --counts the amount of 0s in the sudoku board
 backtrackLoop :: Board -> Int -> (Int,Int) -> Int -> Int
 backtrackLoop board lengthBoard (row,col) count
     | row >= lengthBoard = count -- reached end of board
     | col >= lengthBoard = backtrackLoop board lengthBoard (row + 1, 0) count
-    | board !! row !! col == 0 = backtrackLoop board lengthBoard (row, col + 1) (count + 1)
-    | otherwise = backtrackLoop board lengthBoard (row, col + 1) count
+   -- | board !! row !! col  < lengthBoard =
+     --   let newBoard = increaseValue board lengthBoard (row,col)
+   -- | otherwise do
+     --   backtrackLoop board lengthBoard (row, col + 1) count
 
 
 
