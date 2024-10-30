@@ -39,35 +39,56 @@ main = do
     
 
 uniqueBoard1 :: Board
-uniqueBoard1 = [[0,1,6,3,9,2,0,5,0],
-    [4,5,8,6,0,7,0,9,3],
-    [2,0,3,0,0,4,7,1,0],
-    [0,0,0,0,3,5,0,0,0],
-    [1,0,0,7,6,9,5,3,2],
-    [0,3,2,4,0,0,9,0,0],
-    [8,0,0,1,4,0,3,7,0],
-    [3,0,9,5,2,8,0,4,0],
-    [6,0,0,9,0,0,0,0,5]]
+uniqueBoard1 = [[0,0,0,3,13,0,0,9,6,1,12,15,0,2,10,0],
+    [14,0,4,0,0,12,0,1,0,0,0,0,0,7,0,3],
+    [16,0,0,0,0,11,7,5,4,9,14,13,0,6,1,15],
+    [0,0,6,0,8,0,2,10,0,5,11,0,14,4,9,13],
+    [0,0,0,0,4,0,15,14,8,12,0,0,5,0,16,2],
+    [1,14,0,4,6,10,0,12,3,16,0,2,9,13,0,7],
+    [0,16,0,0,0,9,0,11,15,14,1,0,10,0,12,6],
+    [10,12,8,6,2,5,0,16,13,11,0,7,1,15,0,4],
+    [7,3,0,0,0,4,9,13,1,0,6,14,2,10,0,12],
+    [2,8,10,0,16,0,0,3,9,0,4,11,0,1,15,14],
+    [6,15,1,14,0,2,0,8,0,3,0,16,4,9,0,11],
+    [4,0,9,0,0,6,1,0,10,8,2,12,0,0,3,0],
+    [0,0,0,1,10,0,0,0,11,0,13,0,15,14,4,0],
+    [0,4,0,0,1,0,0,6,16,0,3,0,0,0,0,5],
+    [3,2,16,0,5,0,11,7,14,0,0,9,8,12,6,0],
+    [0,7,0,5,0,0,0,0,0,6,8,0,0,0,2,10]]
 ambiguousBoard1::Board
-ambiguousBoard1 = [[5,0,2,6,9,0,4,3,7],
-    [0,9,0,0,7,0,0,5,1],
-    [0,7,0,5,0,0,0,0,9],
-    [2,3,0,8,5,9,0,4,6],
-    [0,5,0,4,6,7,1,2,3],
-    [0,6,7,0,3,1,9,8,5],
-    [0,0,0,0,4,3,5,9,0],
-    [0,4,3,0,2,0,6,7,8],
-    [9,2,5,0,0,6,3,0,0]]
+ambiguousBoard1 = [[0,0,0,3,13,0,0,9,6,1,12,15,0,2,10,0],
+    [14,0,4,0,0,12,0,1,0,0,0,0,0,7,0,3],
+    [16,0,0,0,0,11,7,5,4,9,14,13,0,6,1,15],
+    [0,0,6,0,8,0,2,10,0,5,11,0,14,4,9,13],
+    [0,0,0,0,4,0,15,14,8,12,0,0,5,0,16,2],
+    [1,14,0,4,6,10,0,12,3,16,0,2,9,13,0,7],
+    [0,16,0,0,0,9,0,11,15,14,1,0,10,0,12,6],
+    [10,12,8,6,2,5,0,16,13,11,0,7,1,15,0,4],
+    [7,3,0,0,0,4,9,13,1,0,6,14,2,10,0,12],
+    [2,8,10,0,16,0,0,3,9,0,4,11,0,1,15,14],
+    [6,15,1,14,0,2,0,8,0,3,0,16,4,9,0,11],
+    [4,0,9,0,0,6,1,0,10,8,2,12,0,0,3,0],
+    [0,0,0,1,10,0,0,0,11,0,13,0,15,0,4,0],
+    [0,4,0,0,1,0,0,6,16,0,3,0,0,0,0,5],
+    [3,2,16,0,5,0,11,7,14,0,0,9,8,12,6,0],
+    [0,7,0,5,0,0,0,0,0,6,8,0,0,0,2,10]]
 invalidBoard1::Board
-invalidBoard1 = [[0,1,6,3,9,2,0,5,0],
-    [4,5,8,6,0,7,0,9,3],
-    [2,0,3,0,0,4,7,1,0],
-    [0,0,0,0,3,5,0,0,0],
-    [1,0,0,7,0,9,5,3,2],
-    [0,3,2,4,0,0,9,0,0],
-    [8,0,0,1,4,0,3,7,0],
-    [3,0,9,5,2,8,7,4,0],
-    [6,0,0,9,0,0,0,0,5]]
+invalidBoard1 = [[0,0,0,3,13,0,0,9,6,1,12,15,0,2,10,0],
+    [14,0,4,0,0,12,0,1,0,0,0,0,0,7,0,3],
+    [16,0,0,0,0,11,7,5,4,9,14,13,0,6,1,15],
+    [0,0,6,0,8,0,2,10,0,5,11,0,14,4,9,13],
+    [0,0,0,0,4,0,15,14,8,12,0,0,5,0,16,2],
+    [1,14,0,4,6,10,0,12,3,16,0,2,9,13,1,7],
+    [0,16,0,0,0,9,0,11,15,14,1,0,10,0,12,6],
+    [10,12,8,6,2,5,0,16,13,11,0,7,1,15,0,4],
+    [7,3,0,0,0,4,9,13,1,0,6,14,2,10,0,12],
+    [2,8,10,0,16,0,0,3,9,0,4,11,0,1,15,14],
+    [6,15,1,14,0,2,0,8,0,3,0,16,4,9,0,11],
+    [4,0,9,0,0,6,1,0,10,8,2,12,0,0,3,0],
+    [0,0,0,1,10,0,0,0,11,0,13,0,15,0,4,0],
+    [0,4,0,9,1,0,0,6,16,0,3,0,0,0,0,5],
+    [3,2,16,0,5,0,11,7,14,0,0,9,8,12,6,0],
+    [0,7,0,5,0,0,0,0,0,6,8,0,0,0,2,10]]
 
 --increase value of a cell by 1
 increaseValue:: Board -> Int -> (Int, Int) -> Board
@@ -104,8 +125,8 @@ backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
                             else if (evaluateCombination (board !! (lengthBoard -1)) &&
                                     evaluateCombination [board !! x !! (lengthBoard -1) | x <- [0..(lengthBoard -1)]] &&
                                     evaluateSubgrid board (round(sqrt (fromIntegral lengthBoard))) ((lengthBoard -1), (lengthBoard -1)))
-                                    then backtrackLoop oldBoard board lengthBoard (head previousCoord) (tail previousCoord) (count + 1)--explored one possibility fully
-                            else backtrackLoop oldBoard board lengthBoard (head previousCoord) (tail previousCoord) count--explored one possibility fully
+                                    then backtrackLoop oldBoard board lengthBoard (head previousCoord) previousCoord (count + 1)--explored one possibility fully
+                            else backtrackLoop oldBoard board lengthBoard (head previousCoord) previousCoord count
 
     | col >= lengthBoard = backtrackLoop oldBoard board lengthBoard (row + 1, 0) previousCoord count --reached end of a row, moving to the next
     | oldBoard !! row !! col /= 0 = backtrackLoop oldBoard board lengthBoard (row, col + 1) previousCoord count --square was not originally empty and can be skipped
@@ -116,7 +137,7 @@ backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
             subgridLength = round(sqrt (fromIntegral lengthBoard)) --assuming that board complies with n^2, it will never give a decimal result
             tpc = tail previousCoord
 
-        in --traceShow (previousCoord, count) $
+        in --traceShow (newBoard, count) $
 
             if newBoard !! row !! col == 0 then --exhausted all numbers in that square in current branch
                 if length previousCoord == 1 then count --no branches left
