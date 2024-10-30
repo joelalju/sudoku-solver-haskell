@@ -30,57 +30,44 @@ numSolutions board
 -- TEST MAIN
 main :: IO ()
 main = do
-    let result = backtrackLoop examplePuzzle examplePuzzle (length (head exampleBoard)) (0,0) [] 0
-    --let result2 = backtrackLoop resolvedSudoku resolvedSudoku (length (head resolvedSudoku)) (0,0) 0
+    let result = backtrackLoop uniqueBoard1 uniqueBoard1 (length (head uniqueBoard1)) (0,0) [] 0
+    let result2 = backtrackLoop ambiguousBoard1 ambiguousBoard1 (length (head ambiguousBoard1)) (0,0) [] 0
+    let result3 = backtrackLoop invalidBoard1 invalidBoard1 (length (head invalidBoard1)) (0,0) [] 0
     print result
-    --print result2
-    --let result3 = increaseValue exampleBoard (length (head exampleBoard)) (8,0)
-    --print result3
+    print result2
+    print result3
+    
 
-
-
--- Sample 9x9 Sudoku board (0 represents empty cells)
-exampleBoard :: Board
-exampleBoard =
-    [ [5, 3, 0, 0, 7, 0, 0, 0, 0]
-    , [6, 0, 0, 1, 9, 5, 0, 0, 0]
-    , [0, 9, 8, 0, 0, 0, 0, 6, 0]
-    , [8, 0, 0, 0, 6, 0, 0, 0, 3]
-    , [4, 0, 0, 8, 0, 3, 0, 0, 1]
-    , [7, 0, 0, 0, 2, 0, 0, 0, 6]
-    , [0, 6, 0, 0, 0, 0, 2, 8, 0]
-    , [0, 0, 0, 4, 1, 9, 0, 0, 5]
-    , [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
-
-resolvedSudoku :: Board
-resolvedSudoku =
-    [ [5, 3, 4, 6, 7, 8, 9, 1, 2]
-    , [6, 7, 2, 1, 9, 5, 3, 4, 8]
-    , [1, 9, 8, 3, 4, 2, 5, 6, 7]
-    , [8, 5, 9, 7, 6, 1, 4, 2, 3]
-    , [4, 2, 6, 8, 5, 3, 7, 9, 1]
-    , [7, 1, 3, 9, 2, 4, 8, 5, 6]
-    , [9, 6, 1, 5, 3, 7, 2, 8, 4]
-    , [2, 8, 7, 4, 1, 9, 6, 3, 5]
-    , [3, 4, 5, 2, 8, 6, 1, 7, 9]
-    ]
-
-
--- Sudoku Puzzle with 3 possible combinations
-examplePuzzle :: Board
-examplePuzzle =
-    [ [5, 3, 0, 0, 7, 0, 0, 0, 0]
-    , [6, 0, 0, 1, 9, 5, 0, 0, 0]
-    , [0, 9, 8, 0, 0, 0, 0, 6, 0]
-    , [8, 0, 0, 0, 6, 0, 0, 0, 3]
-    , [4, 0, 0, 8, 0, 3, 0, 0, 1]
-    , [7, 0, 0, 0, 2, 0, 0, 0, 6]
-    , [0, 6, 0, 0, 0, 0, 2, 8, 0]
-    , [0, 0, 0, 4, 1, 9, 0, 0, 5]
-    , [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
-
+uniqueBoard1 :: Board
+uniqueBoard1 = [[0,1,6,3,9,2,0,5,0],
+    [4,5,8,6,0,7,0,9,3],
+    [2,0,3,0,0,4,7,1,0],
+    [0,0,0,0,3,5,0,0,0],
+    [1,0,0,7,6,9,5,3,2],
+    [0,3,2,4,0,0,9,0,0],
+    [8,0,0,1,4,0,3,7,0],
+    [3,0,9,5,2,8,0,4,0],
+    [6,0,0,9,0,0,0,0,5]]
+ambiguousBoard1::Board
+ambiguousBoard1 = [[5,0,2,6,9,0,4,3,7],
+    [0,9,0,0,7,0,0,5,1],
+    [0,7,0,5,0,0,0,0,9],
+    [2,3,0,8,5,9,0,4,6],
+    [0,5,0,4,6,7,1,2,3],
+    [0,6,7,0,3,1,9,8,5],
+    [0,0,0,0,4,3,5,9,0],
+    [0,4,3,0,2,0,6,7,8],
+    [9,2,5,0,0,6,3,0,0]]
+invalidBoard1::Board
+invalidBoard1 = [[0,1,6,3,9,2,0,5,0],
+    [4,5,8,6,0,7,0,9,3],
+    [2,0,3,0,0,4,7,1,0],
+    [0,0,0,0,3,5,0,0,0],
+    [1,0,0,7,0,9,5,3,2],
+    [0,3,2,4,0,0,9,0,0],
+    [8,0,0,1,4,0,3,7,0],
+    [3,0,9,5,2,8,7,4,0],
+    [6,0,0,9,0,0,0,0,5]]
 
 --increase value of a cell by 1
 increaseValue:: Board -> Int -> (Int, Int) -> Board
@@ -98,6 +85,8 @@ evaluateCombination row =
       cleanedRow = [x | x <- row, x /= 0]
   in length [x | x <- [1..size], x `elem` cleanedRow] == length cleanedRow
 
+
+
 --obtains the subgrid of a given square, turns it into a list and evaluates it
 evaluateSubgrid:: Board -> Int -> (Int,Int) -> Bool
 evaluateSubgrid newBoard subgridLength (row, col) =
@@ -111,26 +100,33 @@ evaluateSubgrid newBoard subgridLength (row, col) =
 
 backtrackLoop :: Board -> Board -> Int -> (Int,Int) -> [(Int,Int)] -> Int -> Int
 backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
-    | row >= lengthBoard = if null previousCoord then (count + 1) --all routes exhausted
-                           else backtrackLoop oldBoard board lengthBoard (head previousCoord) (tail previousCoord) (count + 1)--explored one possibility fully
+    | row >= lengthBoard  = if null previousCoord then count --all routes exhausted
+                            else if (evaluateCombination (board !! (lengthBoard -1)) &&
+                                    evaluateCombination [board !! x !! (lengthBoard -1) | x <- [0..(lengthBoard -1)]] &&
+                                    evaluateSubgrid board (round(sqrt (fromIntegral lengthBoard))) ((lengthBoard -1), (lengthBoard -1)))
+                                    then backtrackLoop oldBoard board lengthBoard (head previousCoord) (tail previousCoord) (count + 1)--explored one possibility fully
+                            else backtrackLoop oldBoard board lengthBoard (head previousCoord) (tail previousCoord) count--explored one possibility fully
 
-    | col >= lengthBoard = backtrackLoop oldBoard board lengthBoard (row + 1, col) previousCoord count --reached end of a row, moving to the next
+    | col >= lengthBoard = backtrackLoop oldBoard board lengthBoard (row + 1, 0) previousCoord count --reached end of a row, moving to the next
     | oldBoard !! row !! col /= 0 = backtrackLoop oldBoard board lengthBoard (row, col + 1) previousCoord count --square was not originally empty and can be skipped
 
     | otherwise =
         let updatePreviousCoord = if (board !! row !! col == 0) then (row,col):previousCoord else previousCoord --first time checking an empty square
             newBoard = increaseValue board lengthBoard (row,col)   --increment value +1
             subgridLength = round(sqrt (fromIntegral lengthBoard)) --assuming that board complies with n^2, it will never give a decimal result
-        in traceShow newBoard $
+            tpc = tail previousCoord
+
+        in --traceShow (previousCoord, count) $
+
             if newBoard !! row !! col == 0 then --exhausted all numbers in that square in current branch
-                if null previousCoord then count --no branches left
-                else backtrackLoop oldBoard newBoard lengthBoard (head previousCoord) (tail previousCoord) count
+                if length previousCoord == 1 then count --no branches left
+                else backtrackLoop oldBoard newBoard lengthBoard (head tpc) (tail previousCoord) count
             else if (evaluateCombination (newBoard !! row) &&
-                    evaluateCombination (newBoard !! col) &&
-                    evaluateSubgrid newBoard subgridLength (row, col))--legal combination
+                    evaluateCombination [newBoard !! x !! col | x <- [0..(lengthBoard -1)]] &&
+                    evaluateSubgrid newBoard subgridLength (row, col)) --legal combination
 
                     then backtrackLoop oldBoard newBoard lengthBoard (row, col + 1) updatePreviousCoord count
-            else backtrackLoop oldBoard newBoard lengthBoard (row, col) updatePreviousCoord count -- illegal combination below length, try next number
+                    else backtrackLoop oldBoard newBoard lengthBoard (row, col) updatePreviousCoord count -- illegal combination below length, try next number
 
 
 
