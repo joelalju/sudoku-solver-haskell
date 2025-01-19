@@ -6,6 +6,20 @@ import Sudoku(Board, Solutions(..))
 
 {- (Remember to provide a brief (about 100-500 words) description of
    your implementation.)
+
+    numSolutions provides how many solutions a sudoku board has by calling the recursive function backtrackLoop, which indicates how many total solutions said board has.
+    backtrackLoop applies a brute force search backtracking method, as indicated by the wikipedia page https://en.wikipedia.org/wiki/Sudoku_solving_algorithms.
+    The logic behind it is that, on each iteration of the function, I'm increasing the value of a given cell by, I check whether the combination of values for the row, column and subgrid related to the cell are valid (not counting empty cells) and then, depending whether or not all checks are passed, I move to the next cell or increase the value of the cell further. If all possibilities for a given cell are exhausted without a combination being valid, it means that branch of possibilities is not valid and I rollback to the previous modified value.
+    The way I rollback to previous values is by doing a stack of coordinates called previousCoord, which I update every single time I modify a cell with a 0 value (which means I'm checking a cell from scratch) and I pop every time we need to go to the previous modified cell. If no values are left in previousCoord, it means that all possibilities have been exhausted.
+
+    The function is divided in four steps: 
+    First, I check whether the row "pointer" has gone beyond the size of the board. If so, it means that all rows have been updated and are valid by sudoku conventions if the last cell is valid. This means there is a complete board combination and I increase the counter (if valid) before going back to the last previousCoord.
+    Second, I check whether the column "pointer" has gone beyond the size of the board. This simply means that I need to jump to the next row, so I jump to (row+1,0).
+    Third, I check whether a cell I'm currently pointing at has a predefined value, which means I can't modify and has to be skipped. I achieve this through checking the original board given (oldBoard).
+    Fourth, knowing that I am in a modifiable cell inside the scope of the grid, I proceed to increase its value and go through all the validations before moving on to the next cell or trying the next value. I also have the backtracking logic in this step if the value overflows back to 0 (exhausted all options).
+
+    The value increase and validations have their own functions for ease of use. The validation works by checking whether all numbers in a given array (after deleting all 0s) are not duplicated and represented between 1 and the size of the array, which will be its square.
+    I utilize said function evaluateCombination straight away when checking rows and columns, while I turn a subgrid into an array first through evaluateSubgrid before calling evaluateCombination to make it readable.
  -}
 
 author :: String
@@ -200,6 +214,7 @@ evaluateSubgrid newBoard subgridLength (row, col) =
           board and oldBoard have the same grid size.
           (row,col) values cannot be above lengthBoard
           lengthBoard has to be equal to the size of either board
+          all values before (row,col) are valid as per sudoku ruling.
     RETURNS: how many possible sudoku solutions oldBoard has.
     EXAMPLES:
     backtrackLoop [[0,1,6,3,9,2,0,5,0],
@@ -220,7 +235,7 @@ evaluateSubgrid newBoard subgridLength (row, col) =
     [3,0,9,5,2,8,0,4,0],
     [6,0,0,9,0,0,0,0,5]] 9 (0,0) [] 0 = 1
 -}
--- VARIANT:  length (row,col)
+-- VARIANT:  length (row,col), previousCoord
 backtrackLoop :: Board -> Board -> Int -> (Int,Int) -> [(Int,Int)] -> Int -> Int
 backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
     | row >= lengthBoard  = if null previousCoord then count --all routes exhausted
