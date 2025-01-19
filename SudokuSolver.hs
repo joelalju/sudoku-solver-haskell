@@ -16,6 +16,29 @@ nickname = "JohnGranblue"  -- replace `undefined' with a nickname for your solve
 
 {- (Remember to provide a complete function specification.)
  -}
+
+{-  numSolutions board
+    Indicates if a sudoku has none, one or more than one solution
+    PRE: The length of the Board is the square of a positive integer, the board is square, the board contains only numbers between 0 and the length of the Board (inclusive), 0 indicates an empty cell.
+    RETURNS: a data "Solutions"
+    EXAMPLES: 
+    numSolutions [[0,10,2,0,0,8,9,3,11,4,0,7,1,5,12,0],
+    [7,4,0,16,10,14,0,2,1,6,12,0,0,0,0,13],
+    [0,6,1,12,0,7,0,0,3,13,9,8,0,0,15,0],
+    [8,13,3,9,6,5,12,1,2,10,15,14,11,7,0,4],
+    [9,0,0,5,11,12,0,6,10,3,8,15,4,16,0,2],
+    [0,0,4,14,3,15,8,0,6,0,7,12,13,9,0,1],
+    [12,11,0,7,2,16,14,0,13,0,5,9,0,0,8,3],
+    [0,0,0,8,1,9,5,13,4,0,14,0,6,12,7,0],
+    [0,0,9,6,0,11,4,0,15,8,0,3,16,2,10,0],
+    [0,0,0,13,5,0,6,9,16,14,10,2,0,11,0,7],
+    [11,7,12,4,14,0,0,16,9,5,6,0,15,3,13,0],
+    [2,14,0,10,0,0,13,15,12,0,4,0,9,1,6,5],
+    [4,16,7,2,15,0,0,0,5,0,0,6,0,13,0,9],
+    [0,12,5,11,16,0,0,0,8,0,0,13,14,10,0,15],
+    [13,9,8,1,12,6,11,5,14,15,0,0,7,4,2,16],
+    [10,15,0,3,0,13,1,8,0,16,2,0,5,6,0,12]] = UniqueSolution
+-}
 numSolutions :: Board -> Solutions
 numSolutions [] = NoSolution
 numSolutions board 
@@ -23,7 +46,7 @@ numSolutions board
    | backtrackLoop board board (length (head board)) (0,0) [] 0 > 1     = MultipleSolutions
    | otherwise                                       = NoSolution
 
-{-
+{- Auxilliary instance and arrays for testing purposes
 instance Show Solutions where
     show NoSolution        = "NoSolution"
     show UniqueSolution    = "UniqueSolution"
@@ -83,7 +106,45 @@ invalidBoard = [[0,10,2,0,0,8,9,3,11,4,0,7,1,5,12,0],
 -}
 
 
---increase value of a cell by 1
+{-  increaseValue oldBoard lengthBoard (row,col)
+    Increases the value of a cell in a sudoku board by 1.
+    PRE:  row,col are lower than lengthBoard and positive (including 0).
+    RETURNS: oldBoard with the cell indicated by row,col increased by 1 (if the increased value were to increase above the value of lengthBoard, then it'll be 0)
+    EXAMPLES:
+    increaseValue [[0,10,2,0,0,8,9,3,11,4,0,7,1,5,12,0],
+        [7,4,0,16,10,14,0,2,1,6,12,0,0,0,0,13],
+        [0,6,1,12,0,7,0,0,3,13,9,8,0,0,15,0],
+        [8,13,3,9,6,5,12,1,2,10,15,14,11,7,0,4],
+        [9,0,0,5,11,12,0,6,10,3,8,15,4,16,0,2],
+        [0,0,4,14,3,15,8,0,6,0,7,12,13,9,0,1],
+        [12,11,0,7,2,16,14,0,13,0,5,9,0,0,8,3],
+        [0,0,0,8,1,9,5,13,4,0,14,0,6,12,7,0],
+        [0,0,9,6,0,11,4,0,15,8,0,3,16,2,10,0],
+        [0,0,0,13,5,0,6,9,16,14,10,2,0,11,0,7],
+        [11,7,12,4,14,0,0,16,9,5,6,0,15,3,13,0],
+        [2,14,0,10,0,0,13,15,12,0,4,0,9,1,6,5],
+        [4,16,7,2,15,0,0,0,5,0,0,6,0,13,0,9],
+        [0,12,5,11,16,0,0,0,8,0,0,13,14,10,0,15],
+        [13,9,8,1,12,6,11,5,14,15,0,0,7,4,2,16],
+        [10,15,0,3,0,13,1,8,0,16,2,0,5,6,0,12]] 16 (0,0)  =
+
+        [[1,10,2,0,0,8,9,3,11,4,0,7,1,5,12,0],
+        [7,4,0,16,10,14,0,2,1,6,12,0,0,0,0,13],
+        [0,6,1,12,0,7,0,0,3,13,9,8,0,0,15,0],
+        [8,13,3,9,6,5,12,1,2,10,15,14,11,7,0,4],
+        [9,0,0,5,11,12,0,6,10,3,8,15,4,16,0,2],
+        [0,0,4,14,3,15,8,0,6,0,7,12,13,9,0,1],
+        [12,11,0,7,2,16,14,0,13,0,5,9,0,0,8,3],
+        [0,0,0,8,1,9,5,13,4,0,14,0,6,12,7,0],
+        [0,0,9,6,0,11,4,0,15,8,0,3,16,2,10,0],
+        [0,0,0,13,5,0,6,9,16,14,10,2,0,11,0,7],
+        [11,7,12,4,14,0,0,16,9,5,6,0,15,3,13,0],
+        [2,14,0,10,0,0,13,15,12,0,4,0,9,1,6,5],
+        [4,16,7,2,15,0,0,0,5,0,0,6,0,13,0,9],
+        [0,12,5,11,16,0,0,0,8,0,0,13,14,10,0,15],
+        [13,9,8,1,12,6,11,5,14,15,0,0,7,4,2,16],
+        [10,15,0,3,0,13,1,8,0,16,2,0,5,6,0,12]]    
+-}
 increaseValue:: Board -> Int -> (Int, Int) -> Board
 increaseValue oldBoard lengthBoard (row,col) =
     [if x == row then 
@@ -91,7 +152,12 @@ increaseValue oldBoard lengthBoard (row,col) =
         else oldBoard !! x !! y | y <- [0..lengthBoard - 1]]
      else oldBoard !! x | x <- [0..lengthBoard - 1]]
 
---Check if there are duplicates or number above size limit in a row
+{-  evaluateCombination row
+    Checks if there are duplicates or number above size limit in a given row
+    RETURNS: A bool indicating whether or not there are two equal numbers (not counting 0) or numbers above the size of the dataset in a given array
+    EXAMPLES: evaluateCombination [0,0,1,2,3] = False
+    evaluateCombination [3,2,1] = True
+-}
 evaluateCombination:: [Int] -> Bool
 evaluateCombination [] = True
 evaluateCombination row =
@@ -100,8 +166,23 @@ evaluateCombination row =
   in length [x | x <- [1..size], x `elem` cleanedRow] == length cleanedRow
 
 
-
---obtains the subgrid of a given square, turns it into a list and evaluates it
+{-  evaluateSubgrid newBoard subgridLength (row, col) 
+    Obtains the subgrid of a given square, turns it into a list and evaluates it
+    PRE:  The length of the Board is the square of a positive integer, the board is square.
+          row and col are lower than the size of an array in newBoard.
+    RETURNS: A bool indicating whether or not the subgrid delimited by subgridLength and (row,col) contains no duplicate values (not counting 0) and said values 
+            are not higher than the size of the grid.
+    EXAMPLES: 
+    evaluateSubgrid [[0,1,6,3,9,2,0,5,0],
+    [4,5,8,6,0,7,0,9,3],
+    [2,0,3,0,0,4,7,1,0],
+    [0,0,0,0,3,5,0,0,0],
+    [1,0,0,7,6,9,5,3,2],
+    [0,3,2,4,0,0,9,0,0],
+    [8,0,0,1,4,0,3,7,0],
+    [3,0,9,5,2,8,0,4,0],
+    [6,0,0,9,0,0,0,0,5]] 3 (0,2) = True
+-}
 evaluateSubgrid:: Board -> Int -> (Int,Int) -> Bool
 evaluateSubgrid newBoard subgridLength (row, col) =
     let rowStart = row - (row `mod` subgridLength) --beginning of the subgrid's row in relation to the whole board
@@ -112,6 +193,34 @@ evaluateSubgrid newBoard subgridLength (row, col) =
     in evaluateCombination evaluateList
 
 
+{-  backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
+    Indicates whether a board contains 0, 1 or +1 solution following sudoku rules.
+    PRE:  The length of oldBoard and board is the square of a positive integer, the boards are squares,
+          the boards contain only numbers between 0 and the length of the Board (inclusive), 0 indicates an empty cell.
+          board and oldBoard have the same grid size.
+          (row,col) values cannot be above lengthBoard
+          lengthBoard has to be equal to the size of either board
+    RETURNS: how many possible sudoku solutions oldBoard has.
+    EXAMPLES:
+    backtrackLoop [[0,1,6,3,9,2,0,5,0],
+    [4,5,8,6,0,7,0,9,3],
+    [2,0,3,0,0,4,7,1,0],
+    [0,0,0,0,3,5,0,0,0],
+    [1,0,0,7,6,9,5,3,2],
+    [0,3,2,4,0,0,9,0,0],
+    [8,0,0,1,4,0,3,7,0],
+    [3,0,9,5,2,8,0,4,0],
+    [6,0,0,9,0,0,0,0,5]] [[0,1,6,3,9,2,0,5,0],
+    [4,5,8,6,0,7,0,9,3],
+    [2,0,3,0,0,4,7,1,0],
+    [0,0,0,0,3,5,0,0,0],
+    [1,0,0,7,6,9,5,3,2],
+    [0,3,2,4,0,0,9,0,0],
+    [8,0,0,1,4,0,3,7,0],
+    [3,0,9,5,2,8,0,4,0],
+    [6,0,0,9,0,0,0,0,5]] 9 (0,0) [] 0 = 1
+-}
+-- VARIANT:  length (row,col)
 backtrackLoop :: Board -> Board -> Int -> (Int,Int) -> [(Int,Int)] -> Int -> Int
 backtrackLoop oldBoard board lengthBoard (row,col) previousCoord count
     | row >= lengthBoard  = if null previousCoord then count --all routes exhausted
